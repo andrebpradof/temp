@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -151,7 +151,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AdmProcesso.cpp" />
     <ClCompile Include="Memoria.cpp" />
     <ClCompile Include="MemoriaVirtual.cpp" />
     <ClCompile Include="PaginaDeDisco.cpp" />
@@ -159,7 +158,6 @@
     <ClCompile Include="Trabalho_3.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AdmProcesso.h" />
     <ClInclude Include="head.h" />
     <ClInclude Include="Memoria.h" />
     <ClInclude Include="MemoriaVirtual.h" />

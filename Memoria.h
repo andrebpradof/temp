@@ -5,7 +5,8 @@ class Memoria
 {
 public:
 	int ocupacao;
-	std::list<PaginaDeDisco> lista_paginas_de_disco;
+	int tamanho;
+	vector<PaginaDeDisco> lista_paginas_de_disco;
 	Memoria();
 	void mostrarStatus();
 };
