@@ -6,7 +6,7 @@ class Memoria
 public:
 	int ocupacao;
 	int tamanho;
-	vector<PaginaDeDisco> lista_paginas_de_disco;
+	list<PaginaDeDisco> lista_paginas_de_disco;
 	Memoria();
 	void mostrarStatus();
 };

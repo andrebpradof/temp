@@ -2,18 +2,23 @@
 #include "Head.h"
 #include "Memoria.h"
 #include "Processo.h"
+#include "PaginaDeDisco.h"
 class MemoriaVirtual
 {
 private:
-	int alocaMemoria(int pid, int tamanho, Memoria *memoria);
+	int alocaMemoria(int pid, int tamanho);
+	int swapping(int num_paginas);
 
 public:
 	int num_pag_disco;
 	int tam_total;
 	int ocupacao;
+	int num_pag_ram;
+	int num_pag_disco;
+	int pont_relogio;
 	Memoria ram;
 	Memoria disco;
-	vector<Processo> lista_processos_ativos;
+	list<Processo> lista_processos_ativos;
 
 	MemoriaVirtual();
 	int alocarProcesso(int pid, int tamanho);

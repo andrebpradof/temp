@@ -1,5 +1,6 @@
 #include "MemoriaVirtual.h"
 
+
 MemoriaVirtual::MemoriaVirtual() {
 	this->ocupacao = 0;
 	this->tam_total = TAM_DISCO + TAM_RAM;
@@ -7,6 +8,8 @@ MemoriaVirtual::MemoriaVirtual() {
 	this->ram.tamanho = TAM_RAM;
 	this->disco.ocupacao = 0;
 	this->disco.tamanho = TAM_DISCO;
+	this->num_pag_disco = TAM_DISCO / TAM_PAGE;
+	this->num_pag_ram = TAM_RAM / TAM_PAGE;
 }
 
 int MemoriaVirtual::alocarProcesso(int pid, int tamanho) {
@@ -24,23 +27,57 @@ int MemoriaVirtual::alocarProcesso(int pid, int tamanho) {
 	}
 	else {      //Se houver espaço na memoria, o processo e inserido na lista de processos ativos
 		lista_processos_ativos.push_back(temp);
-		if ((ram.ocupacao + tamanho) <= TAM_RAM) {      //Verifica se o processo cabe na RAM
-			alocaMemoria(pid, tamanho, &ram);
-		}
+		alocaMemoria(pid, tamanho);
 	}
-
 	return 1;
 }
 
-int MemoriaVirtual::alocaMemoria(int pid, int tamanho, Memoria *memoria){
-	int num_paginas = (int)tamanho / TAM_PAGE;
-	if ((tamanho % TAM_PAGE) != 0)
-		num_paginas += 1;
+int MemoriaVirtual::alocaMemoria(int pid, int tamanho){
+	int num_paginas = 0;
+	int ocupacao = 0;
+	int cont = 0;
 
-	for (int i = 0; i < num_paginas; i++) {
+	num_paginas = (int)tamanho / TAM_PAGE; // calcula quantas paginas de disco serao alocadas
+	if ((tamanho % TAM_PAGE) != 0) {
+		num_paginas++;
+	}
+	
+	while (num_paginas != 0) {
+		if (this->ram.ocupacao < this->num_pag_ram) {
+			PaginaDeDisco pagina_nova(cont, pid, TAM_PAGE);
+			this->ram.lista_paginas_de_disco.push_back(pagina_nova);
+			this->ocupacao++;
+			num_paginas--;
+			cont++;
+		}
+		else {
+
+		}
+	}
+	
+	this->num_pag_disco += num_paginas;
+}
+
+int MemoriaVirtual::swapping(int num_paginas) {
+	if (num_paginas <= this->num_pag_ram) { // Cabe totalmente na RAM
+		int num_subs = num_paginas - (this->num_pag_ram - this->ram.ocupacao); // Numero de substituicoes necessarias
+		while (num_paginas != 0) {
+			if (this->ram.lista_paginas_de_disco.front().r == 0) {
+				this->disco.lista_paginas_de_disco.push_back(this->ram.lista_paginas_de_disco.front());
+				this->ram.lista_paginas_de_disco.pop_front;
+				num_paginas--;
+			}
+			else {
+				this->ram.lista_paginas_de_disco.front().r = 0;
+				this->ram.lista_paginas_de_disco.push_back(ram.lista_paginas_de_disco.front);
+				this->lista_processos_ativos.pop_front();
+			}
+		}	
+	}
+	else {
 
 	}
-
+	return 1;
 }
 
 int MemoriaVirtual::matarProcesso(int pid) {

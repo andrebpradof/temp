@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <list>
 using namespace std;
 
 const int TAM_RAM = 64;

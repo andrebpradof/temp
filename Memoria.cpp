@@ -2,6 +2,7 @@
 
 Memoria::Memoria() {
 	this->ocupacao = 0;
+	this->iti = lista_paginas_de_disco.begin();
 }
 
 void Memoria::mostrarStatus() {
