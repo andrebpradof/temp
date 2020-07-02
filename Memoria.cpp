@@ -2,7 +2,16 @@
 
 Memoria::Memoria() {
 	this->ocupacao = 0;
-	this->iti = lista_paginas_de_disco.begin();
+}
+
+Memoria::Memoria(int cap_bytes) {
+	this->ocupacao = 0;
+	this->capacidade_bytes = cap_bytes;
+	this->capacidade_pag_disco = cap_bytes / TAM_PAGE;
+}
+
+int Memoria::getCapPagDisco() {
+	return this->capacidade_pag_disco;
 }
 
 void Memoria::mostrarStatus() {

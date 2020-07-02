@@ -1,15 +1,21 @@
 #include "MemoriaVirtual.h"
 
 
-MemoriaVirtual::MemoriaVirtual() {
-	this->ocupacao = 0;
-	this->tam_total = TAM_DISCO + TAM_RAM;
-	this->ram.ocupacao = 0;
-	this->ram.tamanho = TAM_RAM;
-	this->disco.ocupacao = 0;
-	this->disco.tamanho = TAM_DISCO;
-	this->num_pag_disco = TAM_DISCO / TAM_PAGE;
-	this->num_pag_ram = TAM_RAM / TAM_PAGE;
+MemoriaVirtual::MemoriaVirtual(){
+	// Memoria Virtual
+	this->ocupacao = 0; // Em paginas de disco
+	this->tam_total = TAM_DISCO + TAM_RAM; // Em Bytes
+
+	Memoria ram(TAM_RAM);
+	this->ram = ram;
+
+	Memoria disco(TAM_DISCO);
+	this->disco = disco;
+
+	this->ram.ocupacao = 0; // Em paginas de disco
+	this->ram.capacidade_bytes = TAM_RAM; // Em Bytes
+	this->disco.ocupacao = 0; // Em paginas de disco
+	this->disco.capacidade_bytes = TAM_DISCO; // Em Bytes
 }
 
 int MemoriaVirtual::alocarProcesso(int pid, int tamanho) {
@@ -42,42 +48,40 @@ int MemoriaVirtual::alocaMemoria(int pid, int tamanho){
 		num_paginas++;
 	}
 	
-	while (num_paginas != 0) {
-		if (this->ram.ocupacao < this->num_pag_ram) {
-			PaginaDeDisco pagina_nova(cont, pid, TAM_PAGE);
+	while (num_paginas != 0) { 
+		PaginaDeDisco pagina_nova(cont, pid, TAM_PAGE);
+		if (this->ram.ocupacao < this->num_pag_ram) { // Cabe na RAM sem a necessidade de swapping
 			this->ram.lista_paginas_de_disco.push_back(pagina_nova);
+			this->ram.ocupacao++;
 			this->ocupacao++;
 			num_paginas--;
 			cont++;
 		}
-		else {
-
+		else { // Precisa realizar swapping
+			while (true) { // Busca ate encontrar uma pagina de disco com r = 0
+				if (this->ram.lista_paginas_de_disco.front().r == 0) {
+					// Colocara a pagina com o bit r = 0 no disco
+					this->disco.lista_paginas_de_disco.push_back(this->ram.lista_paginas_de_disco.front());
+					this->ram.lista_paginas_de_disco.pop_front; // remove da RAM
+					this->ram.lista_paginas_de_disco.push_back(pagina_nova); // aloca a nova pagina
+					num_paginas--;
+					this->ocupacao++;
+					this->disco.ocupacao++;
+					cont++;
+					break;
+				}
+				else { // Coloca 0 para o bit r e aponta pra o proximo da lista
+					this->ram.lista_paginas_de_disco.front().r = 0;
+					this->ram.lista_paginas_de_disco.push_back(ram.lista_paginas_de_disco.front);
+					this->lista_processos_ativos.pop_front();
+				}
+			}
 		}
 	}
-	
-	this->num_pag_disco += num_paginas;
 }
 
 int MemoriaVirtual::swapping(int num_paginas) {
-	if (num_paginas <= this->num_pag_ram) { // Cabe totalmente na RAM
-		int num_subs = num_paginas - (this->num_pag_ram - this->ram.ocupacao); // Numero de substituicoes necessarias
-		while (num_paginas != 0) {
-			if (this->ram.lista_paginas_de_disco.front().r == 0) {
-				this->disco.lista_paginas_de_disco.push_back(this->ram.lista_paginas_de_disco.front());
-				this->ram.lista_paginas_de_disco.pop_front;
-				num_paginas--;
-			}
-			else {
-				this->ram.lista_paginas_de_disco.front().r = 0;
-				this->ram.lista_paginas_de_disco.push_back(ram.lista_paginas_de_disco.front);
-				this->lista_processos_ativos.pop_front();
-			}
-		}	
-	}
-	else {
-
-	}
-	return 1;
+	
 }
 
 int MemoriaVirtual::matarProcesso(int pid) {

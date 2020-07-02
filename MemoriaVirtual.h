@@ -10,11 +10,8 @@ private:
 	int swapping(int num_paginas);
 
 public:
-	int num_pag_disco;
-	int tam_total;
-	int ocupacao;
-	int num_pag_ram;
-	int num_pag_disco;
+	int tam_total; // Em Bytes
+	int ocupacao; // Em paginas de disco
 	int pont_relogio;
 	Memoria ram;
 	Memoria disco;
