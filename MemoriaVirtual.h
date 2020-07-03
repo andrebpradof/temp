@@ -7,24 +7,25 @@ class MemoriaVirtual
 {
 private:
 	int alocaMemoria(int pid, int tamanho);
-	int swapping(int num_paginas);
 
 public:
 	int tam_total; // Em Bytes
 	int ocupacao; // Em paginas de disco
-	int pont_relogio;
 	Memoria ram;
 	Memoria disco;
 	list<Processo> lista_processos_ativos;
+	list<Processo>::iterator ite_lista_pros;
 
 	MemoriaVirtual();
 	int alocarProcesso(int pid, int tamanho);
 	int matarProcesso(int pid);
 	void imprimeProcesso(int pid);
 	void imprimeProcessosAtivos();
-	int io(int pid, int endereco);
-	int wr(int pid, int endereco);
+	void io(int pid, int endereco);
+	void wr(int pid, int endereco);
 	void imprimeMemoriaVirtual();
-	Processo* consultaProcesso(int pid);
+	int acessaMemoria(int pid, int endereco);
+	int consultaProcesso(int pid);
+	int calculaNumPaginas(int tamanho);
 };
 
