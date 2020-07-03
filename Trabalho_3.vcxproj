@@ -155,7 +155,7 @@
     <ClCompile Include="MemoriaVirtual.cpp" />
     <ClCompile Include="PaginaDeDisco.cpp" />
     <ClCompile Include="Processo.cpp" />
-    <ClCompile Include="Trabalho_3.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="head.h" />
